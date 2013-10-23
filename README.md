@@ -4,7 +4,7 @@ DCL_Bayes - DisCODe Component Library
 Description
 -----------
 
-Zadanie przeprowadza analizę zdjecia kostki, rozpoznanie grup krawędzi i przekazanie informacji do komponentu z siecią Bayesa.
+Zadanie BN_TestSq przeprowadza analizę zdjecia kostki, rozpoznanie grup krawędzi i przekazanie informacji do komponentu z siecią Bayesa.
 
 Komponenty:
 
