@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<smile version="1.0" id="Network1" numsamples="1000" discsamples="10000">
+	<nodes>
+		<cpt id="closeAC">
+			<state id="close" />
+			<state id="not_close" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="closeAB">
+			<state id="close" />
+			<state id="not_close" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="parallelAB">
+			<state id="parallel" />
+			<state id="not_parallel" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="parallelAC">
+			<state id="parallel" />
+			<state id="not_parallel" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="Node5">
+			<state id="yes" />
+			<state id="no" />
+			<parents>closeAC closeAB parallelAB parallelAC</parents>
+			<probabilities>0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="Node2">
+			<state id="yes" />
+			<state id="no" />
+			<parents>Node5</parents>
+			<probabilities>0.5 0.5 0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="closeBC">
+			<state id="close" />
+			<state id="not_close" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="parallelBC">
+			<state id="parallel" />
+			<state id="not_parallel" />
+			<probabilities>0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="Node6">
+			<state id="yes" />
+			<state id="no" />
+			<parents>closeAB closeBC parallelAB parallelBC</parents>
+			<probabilities>0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="Node3">
+			<state id="yes" />
+			<state id="no" />
+			<parents>Node5 Node6</parents>
+			<probabilities>0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="Node7">
+			<state id="yes" />
+			<state id="no" />
+			<parents>closeAC closeBC parallelAC parallelBC</parents>
+			<probabilities>0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="Node4">
+			<state id="yes" />
+			<state id="no" />
+			<parents>Node5 Node7 Node6</parents>
+			<probabilities>0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5</probabilities>
+		</cpt>
+		<cpt id="dice">
+			<state id="YES" />
+			<state id="NO" />
+			<parents>Node2 Node3 Node4</parents>
+			<probabilities>0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5</probabilities>
+		</cpt>
+	</nodes>
+	<extensions>
+		<genie version="1.0" app="GeNIe 2.0.4535.0" name="Network1" faultnameformat="nodestate">
+			<node id="dice">
+				<name>dice</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>208 29 296 70</position>
+			</node>
+			<node id="Node2">
+				<name>1 side</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>110 140 160 172</position>
+			</node>
+			<node id="Node3">
+				<name>2 sides</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>228 146 279 177</position>
+			</node>
+			<node id="Node4">
+				<name>3 sides</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>343 145 392 175</position>
+			</node>
+			<node id="Node5">
+				<name>polyA</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>100 254 148 284</position>
+			</node>
+			<node id="Node6">
+				<name>polyB</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>229 251 277 281</position>
+			</node>
+			<node id="Node7">
+				<name>polyC</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>356 255 404 285</position>
+			</node>
+			<node id="closeAB">
+				<name>closeAB</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>40 375 96 410</position>
+			</node>
+			<node id="closeBC">
+				<name>closeBC</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>400 375 456 410</position>
+			</node>
+			<node id="closeAC">
+				<name>closeAC</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>222 376 278 411</position>
+			</node>
+			<node id="parallelAB">
+				<name>parallelAB</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>78 421 140 459</position>
+			</node>
+			<node id="parallelAC">
+				<name>parallelAC</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>220 418 282 456</position>
+			</node>
+			<node id="parallelBC">
+				<name>parallelBC</name>
+				<interior color="e5f6f7" />
+				<outline color="000080" />
+				<font color="000000" name="Arial" size="8" />
+				<position>363 418 425 456</position>
+			</node>
+		</genie>
+	</extensions>
+</smile>
