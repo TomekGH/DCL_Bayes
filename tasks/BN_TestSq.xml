@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Task>
+	<!-- List of components -->
+	<Components>
+		<Kbd1 type="Keyboard" thread="Exec2" group="s1">
+		    <keys>t</keys> 
+		</Kbd1>
+
+		<Seq1 type="Sequence" thread="Exec1" group="s1">
+			<directory>/home/tomek/Pulpit/datasets/bn/</directory>
+			<triggered>true</triggered>			
+		</Seq1>
+
+		<Color type="CvColorConv" thread="Exec1" group="s1">
+			<type>RGB2GRAY</type>
+		</Color>
+
+		<Threshold type ="CvThreshold" thread="Exec1" group="s1">
+			<type>BINARY</type>
+			<thresh>190</thresh>
+			<maxval>255</maxval>
+		</Threshold>
+
+		<Morphology type="CvMorphology" thread="Exec1" group="s1">
+			<type>MORPH_CLOSE</type>
+			<iterations>0</iterations>
+		</Morphology>
+
+		<Square type="SquareDetection" thread="Exec1" group="s1">
+		</Square>
+
+		<CSP type="CSP_Dice" thread="Exec1" group="s1">
+		</CSP>
+
+		<Bayes type="DiceNetwork" thread="Exec1" group="s1">
+		</Bayes>
+
+		<Wnd1 type="CvWindow" thread="Exec3" group="s1">
+			<title>Preview</title>
+		</Wnd1>
+	</Components>
+
+	<!-- Threads of execution -->
+	<Executors>
+		<Exec1 type="continuous">
+			<main_component>Seq1</main_component>
+		</Exec1>
+
+		<Exec2 type="continuous">
+			<main_component>Kbd1</main_component>
+		</Exec2>
+
+		<Exec3 type="periodic">
+			<main_component>Wnd1</main_component>
+			<interval>0.2</interval>
+		</Exec3>
+	</Executors>
+
+	<!-- Event connections -->
+	<Events>
+		<Event source="Seq1.newImage" destination="Color.onNewImage"/>
+
+		<Event source="Color.newImage" destination="Threshold.onNewImage"/>
+
+		<Event source="Threshold.newImage" destination="Morphology.onNewImage"/>
+
+		<Event source="Morphology.newImage" destination="Square.onNewImage"/>
+
+		<Event source="Square.newImage" destination="CSP.onNewImage"/>
+
+		<Event source="CSP.newImage" destination="Bayes.onNewImage"/>
+
+		<Event source="Bayes.newImage" destination="Wnd1.onNewImage"/>
+
+		<Event source="Kbd1.t_Pressed" destination="Seq1.onTrigger"/>
+	</Events>
+
+	<!-- Data stream assignments -->
+	<DataStreams>
+		<Seq1>
+			<out_img type="out" group="Source"/>
+		</Seq1>
+
+		<Color>
+			<in_img type="in" group="Source"/>
+			<out_img type="out" group="Colorles"/>
+		</Color>
+
+		<Threshold>
+			<in_img type="in" group="Colorles"/>
+			<out_img type="out" group="Thresholded"/>
+		</Threshold>
+
+		<Morphology>
+			<in_img type="in" group="Thresholded"/>
+			<out_img type="out" group="Morphology"/>
+		</Morphology>
+
+		<Square>
+			<in_img type="in" group="Morphology"/>
+			<out_img type="out" group="Squares"/>
+			<out_contours type="out" group="Squares_CO"/>
+			<out_centers type="out" group="Squares_CE"/>
+		</Square>
+
+		<CSP>
+			<in_img type="in" group="Squares"/>
+			<in_contours type="in" group="Squares_CO"/>
+			<in_centers type="in" group="Squares_CE"/>
+			<out_img type="out" group="Graph"/>
+			<out_doubles type="out" group="Graph_doubles"/>
+			<out_triples type="out" group="Graph_triples"/>
+			<out_close type="out" group="Graph_close"/>
+			<out_parallel type="out" group="Graph_parallel"/>
+		</CSP>
+
+		<Bayes>
+			<in_img type="in" group="Graph"/>
+			<in_doubles type="in" group="Graph_doubles"/>
+			<in_triples type="in" group="Graph_triples"/>
+			<in_close type="in" group="Graph_close"/>
+			<in_parallel type="in" group="Graph_parallel"/>
+			<out_img type="out" group="Net"/>
+		</Bayes>
+
+		<Wnd1>
+			<in_img  type="in" group="Net"/>
+		</Wnd1>
+	</DataStreams>
+
+</Task>

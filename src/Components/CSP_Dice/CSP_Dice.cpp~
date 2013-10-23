@@ -1,0 +1,190 @@
+/*!
+ * \file
+ * \brief
+ */
+
+#include <memory>
+#include <string>
+
+#include "CSP_Dice.hpp"
+#include "Common/Logger.hpp"
+
+namespace Processors {
+namespace CSP_Dice {
+
+using namespace cv;
+
+CSP_Dice::CSP_Dice(const std::string & name) : Base::Component(name)
+{
+	LOG(LTRACE) << "Hello CSP_Dice\n";
+}
+
+CSP_Dice::~CSP_Dice()
+{
+	LOG(LTRACE) << "Good bye CSP_Dice\n";
+}
+
+bool CSP_Dice::onInit()
+{
+	LOG(LTRACE) << "CSP_Dice::initialize\n";
+
+	// Register data streams, events and event handlers HERE!
+
+	    // Register handler.
+	    h_onNewImage.setup(this, &CSP_Dice::onNewImage);
+	    registerHandler("onNewImage", &h_onNewImage);
+	    // Register event.
+	    newImage = registerEvent("newImage");
+	    // Register data streams.
+	    registerStream("in_img", &in_img);
+	    registerStream("in_contours", &in_contours);
+	    registerStream("in_centers", &in_centers);
+	    registerStream("out_img", &out_img);
+	    registerStream("out_doubles", &out_doubles);
+	    registerStream("out_triples", &out_triples);
+	    registerStream("out_close", &out_close);
+	    registerStream("out_parallel", &out_parallel);
+
+	return true;
+}
+
+bool CSP_Dice::onFinish()
+{
+	LOG(LTRACE) << "CSP_Dice::finish\n";
+
+	return true;
+}
+
+bool CSP_Dice::onStep()
+{
+	LOG(LTRACE) << "CSP_Dice::step\n";
+	return true;
+}
+
+bool CSP_Dice::onStop()
+{
+	return true;
+}
+
+bool CSP_Dice::onStart()
+{
+	return true;
+}
+
+void CSP_Dice::onNewImage()
+{
+	Mat img = in_img.read();
+	Mat out = img.clone();
+
+	vector<vector<Point> > contours = in_contours.read();
+	vector<Point> centers = in_centers.read();
+	string tmp, str;
+
+	//circle(out, Point(0.0,0.0), 5, cv::Scalar(0,255,255), 2, 8, 0);
+
+	int elements = centers.size();
+
+	vector<int> singles;
+	vector<vector<int> > doubles;
+	vector<vector<int> > triples;
+	
+	double close[elements][elements];
+	double parallel[elements][elements];
+	double computed[elements][elements];
+
+	for(int i=0; i<elements; i++)
+	{
+		sprintf((char*)tmp.c_str(), "%i", i);
+		str = tmp.c_str();
+		putText(out, str, Point(centers[i].x,centers[i].y), FONT_HERSHEY_DUPLEX, 0.6, cv::Scalar(0.0,255.0,0.0));
+		singles.push_back(i);
+	}
+
+
+	for (int i=0; i<elements; i++)
+	{
+		for(int j=0; j<elements; j++)
+		{
+			close[i][j] = areClose(Point(centers[i].x,centers[i].y),Point(centers[j].x,centers[j].y));
+			parallel[i][j] = areParallel(contours[i], contours[j]);
+		
+			if (close[i][j] >= 0.5)		
+			{
+				line(out, Point(centers[i].x,centers[i].y),Point(centers[j].x,centers[j].y), cv::Scalar(0,255,255), 1, 8, 0);
+			}
+
+			computed[i][j] = close[i][j] * parallel[i][j];
+
+			
+		}
+	}
+	
+	for (int i=0; i<elements; i++)
+	{		
+		for(int j=0; j<elements; j++)
+		{
+			if (i!=j && computed[i][j] >= 0.5)
+			{
+				vector<int> temp2;
+				temp2.push_back(i);
+				temp2.push_back(j);
+				doubles.push_back(temp2);				
+				for (int k=0; k<elements; k++)
+				if (computed[k][j] >= 0.5 && computed[k][i] >= 0.5 && k!=j && k!=i)
+				{
+					vector<int> temp3;
+					temp3.push_back(i);
+					temp3.push_back(j);
+					temp3.push_back(k);
+					doubles.push_back(temp3);
+				}
+			}
+			
+		}
+	}
+
+	vector<vector<double> > outc;
+	vector<vector<double> > outp;
+
+	for (int i=0; i<elements; i++)
+	{		
+		vector<double> temp_c;
+		vector<double> temp_p;		
+		for(int j=0; j<elements; j++)
+		{
+			temp_c.push_back(close[i][j]);
+			temp_p.push_back(parallel[i][j]);
+		}
+		outc.push_back(temp_c);
+		outp.push_back(temp_p);
+	}
+	
+
+	out_img.write(out);
+	newImage->raise();
+}
+
+double CSP_Dice::areClose(Point a, Point b)
+{
+	double dist = sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));
+	if ( dist <= 50) 
+	{		
+		return 1.0;	
+	} 
+	else if ( dist <= 100)
+	{
+		return 0.5;
+	}
+	else 
+	{
+		return 0.0;
+	}	
+}
+
+double CSP_Dice::areParallel(vector<Point> a, vector<Point> b)
+{
+	return 1.0;
+}
+
+}//: namespace CSP_Dice
+}//: namespace Processors
