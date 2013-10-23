@@ -7,8 +7,11 @@ Description
 Zadanie przeprowadza analizę zdjecia kostki, rozpoznanie grup krawędzi i przekazanie informacji do komponentu z siecią Bayesa.
 
 Komponenty:
+
  	SquareDetection - wykrywanie kwadratów (ścianek kostki)
+
  	CSP_Dice - podział krawedzi na grupy par i trójek i opisanie relacji między nimi (równoległe, blisko położone)
+
  	DiceNetwork - wczytanie sieci Bayesa z pliku, zainicjowanie podstawy sieci informacjami z CSP_Dice, wnioskowanie
 
 Dependencies
